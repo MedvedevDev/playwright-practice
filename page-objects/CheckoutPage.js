@@ -11,7 +11,6 @@ export class CheckoutPage {
   }
 
   removeCheapestProduct = async () => {
-    await this.basketItems.first().waitFor();
     const itemsBeforeRemoval = await this.basketItems.count(); // Count of products in the basket before removal to test
     const allPricesTexts = await this.basketItemPrice.allInnerTexts(); //Output: ['499$', '566$']
 
