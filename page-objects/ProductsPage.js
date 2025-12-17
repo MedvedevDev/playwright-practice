@@ -14,6 +14,8 @@ export class ProductsPage {
   };
 
   addProductsToBasket = async (index) => {
+    await this.addToBasketButtons.nth(index).waitFor();
+
     const addButton = this.addToBasketButtons.nth(index);
 
     await expect(addButton).toHaveText("Add to Basket");
@@ -38,7 +40,5 @@ export class ProductsPage {
 
     // expect that these lists are different
     expect(productsBeforeSorting).not.toEqual(productsAfterSorting);
-    console.log(productsAfterSorting);
-    console.log(productsBeforeSorting);
   };
 }
