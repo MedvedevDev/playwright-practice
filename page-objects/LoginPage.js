@@ -6,7 +6,7 @@ export class LoginPage {
     this.registerButton = page.locator('[data-qa="go-to-signup-button"]');
   }
 
-  signup = async () => {
+  goToSignup = async () => {
     await this.registerButton.waitFor();
 
     await this.registerButton.click();
