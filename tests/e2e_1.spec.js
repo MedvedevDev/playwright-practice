@@ -34,4 +34,5 @@ test.only("New user full end-to-end", async ({ page }) => {
   const deliveryDetailsPage = new DeliveryDetails(page);
   await deliveryDetailsPage.fillDetails(deliveryDetails);
   await deliveryDetailsPage.saveDetails();
+  await deliveryDetailsPage.verifySavedDetails();
 });
