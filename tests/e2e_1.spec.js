@@ -6,6 +6,7 @@ import { CheckoutPage } from "../page-objects/CheckoutPage";
 import { LoginPage } from "../page-objects/LoginPage";
 import { RegisterPage } from "../page-objects/RegisterPage";
 import { DeliveryDetails } from "../page-objects/DeliveryDetails";
+import { PaymentPage } from "../page-objects/PaymentPage";
 import { deliveryDetails } from "../data/deliveryDetails";
 
 test.only("New user full end-to-end", async ({ page }) => {
@@ -36,4 +37,7 @@ test.only("New user full end-to-end", async ({ page }) => {
   await deliveryDetailsPage.saveDetails();
   await deliveryDetailsPage.verifySavedDetails();
   await deliveryDetailsPage.continueToPayment();
+
+  const paymentPage = new PaymentPage(page);
+  await paymentPage.activateDiscount();
 });
