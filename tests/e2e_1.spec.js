@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 import { ProductsPage } from "../page-objects/ProductsPage";
 import { Navigation } from "../page-objects/Navigation";
 import { CheckoutPage } from "../page-objects/CheckoutPage";
@@ -10,7 +10,7 @@ import { PaymentPage } from "../page-objects/PaymentPage";
 import { deliveryDetails } from "../data/deliveryDetails";
 import { paymentDetails } from "../data/paymentDetails";
 
-test.only("New user full end-to-end", async ({ page }) => {
+test("New user full end-to-end", async ({ page }) => {
   const productsPage = new ProductsPage(page);
   await productsPage.visitHomePage();
   await productsPage.sortByCheapest(); // sorting products
