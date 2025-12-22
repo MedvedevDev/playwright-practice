@@ -34,6 +34,8 @@ export default defineConfig({
     trace: "on-first-retry",
     actionTimeout: 10000,
   },
+  /* Run a function before all the tests */
+  globalSetup: require.resolve("./global-setup.js"),
 
   /* Configure projects for major browsers */
   projects: [
