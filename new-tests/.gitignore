@@ -1,0 +1,11 @@
+# Angular
+.angular/
+dist/
+node_modules/
+
+# Playwright
+playwright-report/
+test-results/
+
+# Env
+.env
