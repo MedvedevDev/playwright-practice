@@ -74,7 +74,7 @@ test("Locating parent elements", async ({ page }) => {
     .click();
 });
 
-test.only("extracting values", async ({ page }) => {
+test("Extracting values", async ({ page }) => {
   // get single value and assert it
   const basicForm = page.locator("nb-card").filter({ hasText: "Basic form" });
   const buttonText = await basicForm.locator("button").textContent();
@@ -89,5 +89,23 @@ test.only("extracting values", async ({ page }) => {
   const emailField = basicForm.getByRole("textbox", { name: "Email" });
   await emailField.fill("test@test.com");
   const emailFieldValue = await emailField.inputValue();
-  expect(emailFieldValue).toEqual("test@test.com");
+  await expect(emailFieldValue).toEqual("test@test.com");
+});
+
+test.only("Assertions", async ({ page }) => {
+  const buttonSubmit = page
+    .locator("nb-card")
+    .filter({ hasText: "Basic form" })
+    .locator("button");
+
+  // LOCATOR ASSERTION - locator to value | Has timeout: up to 5 sec
+  expect(buttonSubmit).toBeVisible();
+
+  // GENERAL ASSERTION - value to value | No timeout
+  const buttonText = await buttonSubmit.textContent();
+  expect(buttonText).toEqual("Submit");
+
+  // SOFT ASSERTION - test will be continued even if failed
+  await expect.soft(buttonSubmit).toHaveText("Submit ? ");
+  await buttonSubmit.click();
 });
