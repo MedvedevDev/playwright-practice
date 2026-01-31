@@ -199,7 +199,7 @@ test("test filter of the table", async ({ page }) => {
   await page.getByText("Tables & Data").click();
   await page.getByText("Smart Table").click();
 
-  // verify that the table is updated according to the age value
+  // verify that the table is updated according to the age
   const ages = ["20", "30", "40", "200"];
 
   for (let age of ages) {
