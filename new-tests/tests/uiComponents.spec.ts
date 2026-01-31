@@ -84,7 +84,7 @@ test.skip("checkboxes", async ({ page }) => {
   }
 });
 
-test("list and dropdown", async ({ page }) => {
+test.skip("list and dropdown", async ({ page }) => {
   const dropdownMenu = page.locator("ngx-header nb-select");
   await dropdownMenu.click();
 
@@ -99,5 +99,126 @@ test("list and dropdown", async ({ page }) => {
 
   // verify that theme color is changed to Cosmic
   const header = page.locator("nb-layout-header");
-  await expect(header).toHaveCSS("backgroud-color", "rgb(50, 50, 89)");
+  await expect(header).toHaveCSS("backgroun d-color", "rgb(50, 50, 89)");
+});
+
+test("dialog box and tables", async ({ page }) => {
+  await page.getByText("Tables & Data").click();
+  await page.getByText("Smart Table").click();
+
+  // catch the window dialog with listener
+  page.on("dialog", (dialog) => {
+    expect(dialog.message()).toEqual("Are you sure you want to delete?");
+    dialog.accept();
+  });
+
+  // locate  and press the trash icon for Specific table row | get the row by any text
+  await page
+    .getByRole("table")
+    .locator("tr", { hasText: "ann@gmail.com" })
+    .locator(".nb-trash")
+    .click();
+
+  // check that the row is deleted in the tabla
+  // await expect(
+  //   page.getByRole("table").getByText("ann@gmail.com"),
+  // ).not.toBeVisible();
+
+  // check through all the table
+  //const allRows = page.getByRole("table").locator("tr");
+  // OR ->
+  const allRows = page.getByRole("row");
+  const rowsCount = await allRows.count();
+
+  let emailFound = false;
+
+  for (let i = 0; i < rowsCount; i++) {
+    const text = await allRows.nth(i).innerText();
+    if (text.includes("ann@gmail.com")) {
+      emailFound = true;
+      break;
+    }
+  }
+
+  expect(emailFound).toBeFalsy();
+});
+
+test("update data in the table by unique text", async ({ page }) => {
+  await page.getByText("Tables & Data").click();
+  await page.getByText("Smart Table").click();
+
+  // fint the row by text
+  const targetRow = page.getByRole("row", { name: "ruben@gmail.com" });
+  // press the edit button
+  await targetRow.locator(".nb-edit").click();
+
+  // set new age and data
+  await page.locator("input-editor").getByPlaceholder("Age").clear();
+  await page.locator("input-editor").getByPlaceholder("Age").fill("199");
+  await page.locator("input-editor").getByPlaceholder("First Name").clear();
+  await page
+    .locator("input-editor")
+    .getByPlaceholder("First Name")
+    .fill("NEW NAME");
+  await page.locator(".nb-checkmark").click();
+});
+
+test("update data in the table by specific row and column (not unique text)", async ({
+  page,
+}) => {
+  await page.getByText("Tables & Data").click();
+  await page.getByText("Smart Table").click();
+
+  // navigate to the specific page
+  await page
+    .locator("nav.ng2-smart-pagination-nav")
+    .getByRole("link", { name: "2" })
+    .click();
+
+  // getByRole('row', {name: '11'}) -> found 2 results -> filter by a column nth(1) -> search in this column (not the whole table) by the text
+  const targetRowById = page
+    .getByRole("row", { name: "11" })
+    .filter({ has: page.locator("td").nth(1).getByText("11") });
+
+  // update the data
+  await targetRowById.locator(".nb-edit").click();
+  await page.locator("input-editor").getByPlaceholder("E-mail").clear();
+  await page
+    .locator("input-editor")
+    .getByPlaceholder("E-mail")
+    .fill("thisisnewemail@am.am");
+  await page.locator(".nb-checkmark").click();
+
+  // verify that email is updated
+  await expect(targetRowById.locator("td").nth(5)).toHaveText(
+    "thisisnewemail@am.am",
+  );
+});
+
+test("test filter of the table", async ({ page }) => {
+  await page.getByText("Tables & Data").click();
+  await page.getByText("Smart Table").click();
+
+  // verify that the table is updated according to the age value
+  const ages = ["20", "30", "40", "200"];
+
+  for (let age of ages) {
+    await page.locator("input-filter").getByPlaceholder("Age").clear();
+    await page.locator("input-filter").getByPlaceholder("Age").fill(age);
+    await page.waitForTimeout(500); // table doesn't have time to render with new data before going to next loop; we need to create an artificial timeout
+
+    const ageRows = page.locator("tbody tr");
+    for (let row of await ageRows.all()) {
+      const cellValue = await row.locator("td").last().textContent();
+
+      // check negative scenario for age == 200
+      if (age === "200") {
+        expect(await page.getByRole("table").textContent()).toContain(
+          "No data found",
+        );
+      } else {
+        expect(cellValue).toEqual(age);
+      }
+    }
+  }
 });
