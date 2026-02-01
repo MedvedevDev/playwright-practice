@@ -10,7 +10,7 @@ test.describe("Form Latouts page", () => {
     await page.getByText("Form Layouts").click();
   });
 
-  test.skip("input fields", async ({ page }) => {
+  test("input fields", async ({ page }) => {
     const usingTheGridEmailInput = page
       .locator("nb-card", { hasText: "Using the Grid" })
       .getByRole("textbox", { name: "Email" });
@@ -31,7 +31,7 @@ test.describe("Form Latouts page", () => {
     await expect(usingTheGridEmailInput).toHaveValue("thisisemail@test.te");
   });
 
-  test.skip("radio buttons", async ({ page }) => {
+  test("radio buttons", async ({ page }) => {
     const usingTheGrid = page.locator("nb-card", { hasText: "Using the Grid" });
 
     // getByLabel
@@ -56,7 +56,7 @@ test.describe("Form Latouts page", () => {
   });
 });
 
-test.skip("checkboxes", async ({ page }) => {
+test("checkboxes", async ({ page }) => {
   await page.getByText("Modal & Overlays").click();
   await page.getByText("Toastr").click();
 
@@ -84,7 +84,7 @@ test.skip("checkboxes", async ({ page }) => {
   }
 });
 
-test.skip("list and dropdown", async ({ page }) => {
+test("list and dropdown", async ({ page }) => {
   const dropdownMenu = page.locator("ngx-header nb-select");
   await dropdownMenu.click();
 
@@ -221,4 +221,34 @@ test("test filter of the table", async ({ page }) => {
       }
     }
   }
+});
+
+test("sliders update attribute", async ({ page }) => {
+  const tempDragger = page.locator(
+    '[tabtitle="Temperature"] ngx-temperature-dragger circle',
+  );
+  await tempDragger.evaluate((node) => {
+    node.setAttribute("cx", "232.630");
+    node.setAttribute("cy", "232.630");
+  });
+  await tempDragger.click();
+});
+
+test("sliders mouse movement", async ({ page }) => {
+  const tempBox = page.locator(
+    '[tabtitle="Temperature"] ngx-temperature-dragger',
+  );
+  await tempBox.scrollIntoViewIfNeeded();
+
+  const box = await tempBox.boundingBox();
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + 100, y);
+  await page.mouse.move(x + 100, y + 100);
+  await page.mouse.up();
+
+  await expect(tempBox).toContainText("30");
 });
