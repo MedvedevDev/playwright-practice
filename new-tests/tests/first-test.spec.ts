@@ -92,7 +92,7 @@ test("Extracting values", async ({ page }) => {
   await expect(emailFieldValue).toEqual("test@test.com");
 });
 
-test.only("Assertions", async ({ page }) => {
+test("Assertions", async ({ page }) => {
   const buttonSubmit = page
     .locator("nb-card")
     .filter({ hasText: "Basic form" })
