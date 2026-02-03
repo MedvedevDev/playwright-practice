@@ -17,27 +17,27 @@ export class NavigationPage {
     this.tooltipMenu = page.getByText("Tooltip");
   }
 
-  async formLayoutsPage() {
+  async toFormLayoutsPage() {
     await this.selectGroupMenuItem("Forms");
     await this.formLayoutsMenu.click();
   }
 
-  async datepickerPage() {
+  async toDatepickerPage() {
     await this.selectGroupMenuItem("Forms");
     await this.datepickerMenu.click();
   }
 
-  async smartTablePage() {
+  async toSmartTablePage() {
     await this.page.getByText("Tables & Data").click();
     await this.smartTableMenu.click();
   }
 
-  async toastrPage() {
+  async toToastrPage() {
     await this.selectGroupMenuItem("Modal & Overlays");
     await this.toastrMenu.click();
   }
 
-  async tooltipPage() {
+  async toTooltipPage() {
     await this.selectGroupMenuItem("Modal & Overlays");
     await this.tooltipMenu.click();
   }
