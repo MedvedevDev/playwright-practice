@@ -5,7 +5,7 @@ import { DatepickerPage } from "../page-objects/DatepickerPage";
 import { fakerDE as faker } from "@faker-js/faker";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("http://localhost:4200/pages/iot-dashboard");
+  await page.goto("/pages/iot-dashboard");
 });
 
 test("navigation across all pages ", async ({ page }) => {
